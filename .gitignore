@@ -1,5 +1,5 @@
 DebugConfig
-*/Listings
+Listings
 *.tmp
 *.a
 *.o
@@ -7,8 +7,8 @@ DebugConfig
 *.crf
 *.lnk
 *.map
-*/Objects/*
-!*/Objects/*.hex
+Objects/*
+!Objects/*.hex
 *.dep
 *.log
 *.axf

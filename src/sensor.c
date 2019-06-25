@@ -121,11 +121,11 @@ void Accel_Init(void)
 {
 	I2C1_write_byte(ACCEL_ADDR, 0x2D, 0x08);
   Delay_ms(5);
-	I2C1_write_byte(ACCEL_ADDR, 0x31, 0x08);
+	I2C1_write_byte(ACCEL_ADDR, 0x31, 0x03);		// disable full resolution to achieve maximum range
   Delay_ms(5);
   
-  // Because our main loop runs at 50Hz we adjust the output data rate to 50Hz (25Hz bandwidth)
-	I2C1_write_byte(ACCEL_ADDR, 0x2C, 0x09);
+  //  adjust the output data rate to 200Hz
+	I2C1_write_byte(ACCEL_ADDR, 0x2C, 0x0B);
   Delay_ms(5);
 }
 
@@ -149,12 +149,12 @@ void Gyro_Init(void)
 	I2C1_write_byte(GYRO_ADDR, 0x16, 0x1B);
   Delay_ms(5);
   
-  // Set sample rato to 50Hz
-	I2C1_write_byte(GYRO_ADDR, 0x15, 0x0A);
+  // Set sample rato to 125Hz
+	I2C1_write_byte(GYRO_ADDR, 0x15, 0x07);
   Delay_ms(5);
 
   // Set clock to PLL with z gyro reference
-	I2C1_write_byte(GYRO_ADDR, 0x3E, 0x00);
+	I2C1_write_byte(GYRO_ADDR, 0x3E, 0x03);
   Delay_ms(5);
 }
 
@@ -263,7 +263,7 @@ void Read_Gyro()
 #endif
 }
 
-void read_sensors (void)
+void readSensors (void)
 {
 	Read_Gyro(); // Read gyroscope
   Read_Accel(); // Read accelerometer
@@ -319,7 +319,8 @@ void getGres()
 	
 #else
 	
-	gRes = 0.06957;
+	//gRes = 0.06957;
+	gRes = 1.0f/14.375f;
 	
 #endif
 	
@@ -348,10 +349,20 @@ void getAres()
   }
 #else
 	
-	aRes = 1.0/256.0;
+	aRes = 1.0/32.0;
 	
 #endif
 	
+}
+
+void scaleSensors (void)
+{
+	for (int i=0; i<3; i++)
+	{
+		gyro[i] = gyro[i] * gRes;
+		accel[i] = accel[i] * aRes;
+		magnetom[i] = magnetom[i] * mRes;
+	}
 }
 
 int SelfTest (void)
@@ -359,7 +370,7 @@ int SelfTest (void)
 	int ret = 0;
 	int16_t accel_test[3], magnetom_test[3], gyro_test[3];
 	
-	read_sensors();
+	readSensors();
 	
   for (int i=0; i<3; i++)
 	{
@@ -370,7 +381,7 @@ int SelfTest (void)
 	
 	Delay_ms(1000);
 	
-	read_sensors();
+	readSensors();
 	
 	for (int i=0; i<3; i++)
 	{

@@ -210,12 +210,14 @@ void Gyro_Init(void);
 void Read_Accel(void);
 void Read_Magn(void);
 void Read_Gyro(void);
-void read_sensors (void);
+void readSensors (void);
 int16_t readTempData(void);
 
 void getMres(void);
 void getGres(void);
 void getAres(void);
+
+void scaleSensors (void);
 
 int SelfTest (void);
 

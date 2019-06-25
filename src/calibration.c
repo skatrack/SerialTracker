@@ -532,7 +532,7 @@ void calibration_loop (void)
 	if (calibration_enabled) // calibration body
   {			
 		
-    read_sensors();
+    readSensors();
 		calculate_offset();
 		
      switch (calib_sensor)

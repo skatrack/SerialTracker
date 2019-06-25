@@ -113,7 +113,7 @@ int main (void)
 			uptime += (float) SENSORS_INTERVAL/1000.0;
 			
 			// Update sensor readings
-			read_sensors();
+			readSensors();
 			
 			if (connected)
 				SerialSendPacket();		
@@ -213,7 +213,8 @@ void TIM4_IRQHandler (void)
 			uptime += (float) SENSORS_INTERVAL/1000.0;
 			
 			// Update sensor readings
-			read_sensors();	
+			readSensors();	
+			scaleSensors();
 			
 			if (connected)
 				SerialSendPacket();
